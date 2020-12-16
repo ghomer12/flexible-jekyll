@@ -10,16 +10,16 @@ site-twitter: #if your site has a twitter account, enter it here
 
 # Author Settings
 author: Greer Homer # add your name
-author-img: david-freeman.jpg # add your photo
-about-author: Former math teacher doing mathy things! # add description
-social-twitter: # add your Twitter handle
-social-facebook: # add your Facebook handle
-social-github: artemsheludko # add your Github handle
-social-linkedin: # add your Linkedin handle
-social-email: # add your Email address
+author-img: greer-homer.jpg # add your photo
+about-author: Current data analyst and former math teacher doing mathy things # add description
+# social-twitter: # add your Twitter handle
+# social-facebook: # add your Facebook handle
+social-github: ghomer12 # add your Github handle
+social-linkedin: greer-homer-316828a6
+social-email: greer.homer@gmail.com # add your Email address
 
 # Disqus
-discus-identifier: mr-brown # add your discus identifier
+discus-identifier: Greer # add your discus identifier
 
 # Tracker
 analytics: # Google Analytics

@@ -1,0 +1,224 @@
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="Dropdown"></div>
+<div id="my_dataviz"></div>
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 960 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+var formatYear = d3.timeFormat("%Y");
+var parseYear = d3.timeParse("%Y");
+var parseDate = d3.timeParse("%Y");
+
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+//Read the data
+// /Users/greerhomer/flexible-jekyll/assets/img/MaritalRatesByProfession.csv
+// d3.csv("{{ site.data.NationalRates.csv }}", function(data) {
+  // console.log(data)
+d3.csv("https://raw.githubusercontent.com/ghomer12/MariageRates/main/NationalRates.csv", function(data) {
+
+  // d3.csv("{{ site.data.MaritalRatesByProfession.csv }}", function( data2) {
+    // console.log(data2)
+    d3.csv("https://raw.githubusercontent.com/ghomer12/MariageRates/main/MaritalRatesByProfession.csv", function( data2) {
+
+    // do something with the data
+    data2.forEach(function(d) {
+      d.percent = +d.percent;
+      d.MaritalStatus = d.MaritalStatus;
+      d.Profession = d.Profession;
+      d.Year = formatYear(parseYear(+d.YEAR));
+  });
+  var nest = d3.nest()
+    .key(function(d){
+    return d.Profession;
+  })
+    .key(function(d){
+    return d.MaritalStatus;
+  })
+  .entries(data2)
+  .sort(function(a, b){ return d3.ascending(a.key, b.key); }) //alphabetize the keys
+
+// console.log(nest)
+
+  // });
+  data.forEach(function(d) {
+      d.percent = +d.percent;
+      d.MaritalStatus = d.MaritalStatus;
+      d.year  = formatYear(d.YEAR)
+      d.Year = d3.timeParse("%Y")(d.YEAR)
+      d.YEAR = +d.YEAR;
+  });
+
+  // group the data: I want to draw one line per group
+  var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
+    .key(function(d) { return d.MaritalStatus;})
+    .entries(data);
+    // console.log(sumstat)
+
+  // Add X axis --> it is a date format
+  var x = d3.scaleLinear()
+    .domain(d3.extent(data, function(d) { return d.YEAR; }))
+    .range([ 0, width ]);
+
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).tickFormat(d3.format('.4')).ticks(10))
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    // .domain([0, d3.max(data, function(d) { return +d.percent; })])
+    .domain([0, 100])
+    .range([ height, 0 ]);
+  
+    svg.append("g")
+    .call(d3.axisLeft(y));
+
+  // color palette
+  var res = sumstat.map(function(d){ return d.key }) // list of group names
+  var color = d3.scaleOrdinal()
+    .domain(res)
+    .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00', '#fcba03'])
+
+  // Add one dot in the legend for each name.
+svg.selectAll("mydots")
+  .data(res)
+  .enter()
+  .append("circle")
+    .attr("cx", width-150)
+    .attr("cy", function(d,i){ return 5 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("r", 7)
+    .style("fill", function(d){ return color(d)})
+
+// Add one dot in the legend for each name.
+svg.selectAll("mylabels")
+  .data(res)
+  .enter()
+  .append("text")
+    .attr("x", width-130)
+    .attr("y", function(d,i){ return 5 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+
+// Handmade legend
+svg.append('line')
+    .style("stroke", "grey")
+    .style("stroke-width", 5)
+    .style("stroke-dasharray", ("3, 3"))
+    .attr("x1", 20)
+    .attr("y1", 10)
+    .attr("x2", 50)
+    .attr("y2", 10);
+
+svg.append("text")
+    .attr("x", 70)             
+    .attr("y",13)
+    .attr("text-anchor", "middle")  
+    .style("font-size", "10px") 
+    .text("National");
+
+svg.append('line')
+    .style("stroke", "grey")
+    .style("stroke-width", 5)
+    .attr("x1", 130)
+    .attr("y1", 10)
+    .attr("x2", 160)
+    .attr("y2", 10);
+
+svg.append("text")
+    .attr("x", 210)             
+    .attr("y",13)
+    .attr("text-anchor", "middle")  
+    .style("font-size", "10px") 
+    .text("Selected Occupation");
+  
+  svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 10 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Mariage Rates by Profession");
+
+    var Menu = d3.select("#Dropdown")
+    Menu
+        .append("select")
+        .selectAll("option")
+            .data(nest)
+            .enter()
+            .append("option")
+            .attr("value", function(d){
+                return d.key;
+            })
+            .text(function(d){
+                return d.key;
+            })
+
+  // Run update function when dropdown selection changes
+Menu.on('change', function(n){
+  svg.selectAll(".NewLine").remove()
+
+
+  console.log('you changed your selection')
+  for (let i = 0; i < nest.length; i++) {
+    if (nest[i].key == event.target.value ){
+      console.log('it is a match!')
+      console.log(nest[i])
+      console.log(nest[i].values)
+      const dataSelection = nest[i].values
+
+        // Draw the line
+  svg.selectAll(".line")
+      .data(dataSelection)
+      .enter()
+      .append("path")
+      .attr('class','NewLine')
+        .attr("fill", "none")
+        .attr("stroke", function(d){ return color(d.key) })
+        .attr("stroke-width", 3.5)
+        .attr("d", function(d){
+          return d3.line()
+            .x(function(d) { return x(d.YEAR); })
+            .y(function(d) { return y(+d.percent); })
+            (d.values)
+        })
+
+    }
+    
+}
+  // console.log(nest.length)
+})
+  // Draw the line
+  svg.selectAll(".line")
+      .data(sumstat)
+      .enter()
+      .append("path")
+        .attr("fill", "none")
+        .attr("stroke", function(d){ return color(d.key) })
+        .attr("stroke-width", 1.5)
+        .style("stroke-dasharray", ("3, 3"))
+        .attr("d", function(d){
+          return d3.line()
+            .x(function(d) { return x(d.YEAR); })
+            .y(function(d) { return y(+d.percent); })
+            (d.values)
+        })
+
+})
+});
+</script>

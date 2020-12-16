@@ -1,0 +1,364 @@
+I"g4
+<!-- <meta charset="utf-8"> -->
+<head>
+	<style>
+
+
+h1 {text-align:center;}
+
+p.description {text-align:center}
+
+div.tooltip {	
+    position: absolute;		
+    color: white;
+    text-align: left;			
+    width: 290px;					
+    height: 140px;					
+    padding: 2px;				
+    font: 12px Arial;		
+    background: rgb(46, 43, 43);	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+.footer{ 
+       position: fixed;     
+       text-align: right; 
+       font: 8px Arial;		   
+       bottom: 8px; 
+       width: 100%;
+   }  
+
+	</style>
+</head>
+<body>
+    <!-- Add heading for the visualization -->
+    <!-- <h1>Who Teaches in America?</h1> -->
+    <p class="description"> Total number of public school teachers and percentage distribution of school teachers, by race/ethnicity and state: 2011–12</p>
+    <div class="footer">Data Source: https://nces.ed.gov/surveys/sass/tables/sass1112_2013314_t1s_001.asp</div>
+
+    <!-- </select> -->
+	<!-- append visualization svg to this div-->
+<div id="area3"></div> <!-- bar graph -->
+<div id="area1"></div> <!-- choropleth -->
+<div id="area2"></div> <!-- legend -->
+
+<body>
+
+<!-- <script type="text/javascript" src="../lib/d3.v5.min.js"></script> -->
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/topojson.v2.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3-array.v2.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+<!-- <script type="text/javascript" src="../lib/d3-dsv.min.js"></script> -->
+<script src="https://d3js.org/d3-geo-projection.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+ <script>
+
+//build legend
+var colorData = [{"color":"#f7fbff","value":0},{"color":"#08306b","value":350}];
+var extent = d3.extent(colorData, d => d.value);
+var padding = 9;
+var width2 = 320;
+var innerwidth2 = 200 - (padding * 2);
+var barheight2 = 8;
+var height2 = 190;
+
+var xScale = d3.scaleOrdinal()
+    .range([0, innerwidth2])
+    .domain(extent);
+
+var xTicks = colorData.map(d => d.value);
+var xAxis = d3.axisBottom(xScale)
+    .tickSize(barheight2 * 2)
+    .tickValues(['Min', 'max']);
+
+var svg3 = d3.select("#area2").append("svg").attr("width", width2).attr("height", height2);
+var g = svg3.append("g").attr("transform", "translate(" + padding + ", 0)");
+
+var defs = svg3.append("defs");
+var linearGradient = defs.append("linearGradient").attr("id", "myGradient");
+linearGradient.selectAll("stop")
+    .data(colorData)
+    .enter().append("stop")
+    .attr("offset", d => ((d.value - extent[0])/ (extent[1] - extent[0]) * 100) + "%")
+    .attr("stop-color", d => d.color);
+
+g.append("rect")
+    .attr("width", innerwidth2)
+    .attr("height", barheight2)
+    .style("fill", "url(#myGradient)");
+
+
+g.append("text")
+  .attr('x', (width2/3)-10)
+  .attr('y', 40)
+  .attr('text-anchor', 'middle')
+  .style('font-size', '16px')
+  .style('font-weight', 'bold')
+  .text("Teacher Population")
+
+g.append("g")
+    .call(xAxis)
+    .select(".domain").remove();
+	
+// define margins of SVG for Choropleth
+const margin = {top: 0, right: 0, bottom: 0, left: 0};
+const width = 960 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
+
+var margin2 = {top: 20, right: 20, bottom: 50, left: 300},
+    width2 = 760 - margin2.left - margin2.right,
+    height2 = 200 - margin2.top - margin2.bottom;
+
+var svg2 = d3.select("#area3").append("svg")
+    .attr("width", width2 + margin2.left + margin2.right)
+    .attr("height", height2 + margin2.top + margin2.bottom)
+  .append("g")
+    .attr("transform", 
+    "translate(" + margin2.left + "," + margin2.top + ")");
+
+var ybar = d3.scaleBand()
+  .range([height2, 0])
+  .padding(0.1);
+var xbar = d3.scaleLinear()
+  .range([0, width2]);
+
+
+const color = d3.scaleLinear()
+    .range(["#f7fbff","#08306b"])
+
+// Define the div for the tooltip
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+const svg = d3.select('#area1')
+  .append('svg') //scalable vector graphic
+  .attr('width', width)
+  .attr('height', height)
+  .append('g')
+  .attr('class', 'map');
+
+var y = d3.scaleLinear()
+  .range([300, 0])
+  .domain([68, 12]);
+
+var yAxis = d3.axisBottom()
+  .scale(y)
+  .ticks(5);
+
+const projection = d3.geoAlbers()
+
+const path = d3.geoPath().projection(projection);
+
+        Promise.all([
+            //enter code to read files
+            d3.json('https://raw.githubusercontent.com/ghomer12/D3_TeacherChoropleth1/main/state_USA.json'),
+            d3.csv ('https://raw.githubusercontent.com/ghomer12/D3_TeacherChoropleth1/main/TeacherDemog_clean.csv')
+ 
+        ]).then(values => ready(undefined, values[0], values[1])       
+        )
+        function ready(error, states, TeacherData) {
+            //convert data
+            TeacherData.forEach(function(d) {
+                    d['Total Population'] = +d['Total Population'];
+                    d["Hispanic, regardless of race"] = +d["Hispanic, regardless of race"];
+                    d["White, non-Hispanic"] = +d["White, non-Hispanic"];
+                    d["Black, non-Hispanic"] = +d["Black, non-Hispanic"];
+                    d["Asian, non-Hispanic"] = +d["Asian, non-Hispanic"];
+                    d["Native  Hawaiian/Pacific Islander,non-Hispanic"] = +d["Native  Hawaiian/Pacific Islander,non-Hispanic"];
+                    d["American Indian/Alaska Native, non-Hispanic"] = +d["American Indian/Alaska Native, non-Hispanic"];
+                    d["Two or more races, non-Hispanic"] = +d["Two or more races, non-Hispanic"];                    
+            })
+// Create a dictionary for color scale
+        StatePopulations = {}
+        TeacherData.forEach((a)=>StatePopulations[a.State]= +a['Total Population']);
+        
+        AllTeachers = {}
+        TeacherData.forEach((a)=>AllTeachers[a.State]= {
+        "Total Population": a["Total Population"],
+        "Black, non-Hispanic": +a["Black, non-Hispanic"],
+         "Hispanic, regardless of race": a["Hispanic, regardless of race"],
+         "White, non-Hispanic": a["White, non-Hispanic"],
+         "Asian, non-Hispanic": a["Asian, non-Hispanic"],
+         "Native  Hawaiian/Pacific Islander,non-Hispanic": a["Native  Hawaiian/Pacific Islander,non-Hispanic"],
+         "American Indian/Alaska Native, non-Hispanic": a["American Indian/Alaska Native, non-Hispanic"],
+         "Two or more races, non-Hispanic": a["Two or more races, non-Hispanic"]
+         });
+
+        TeacherPercent = {}
+        TeacherData.forEach((a)=>TeacherPercent[a.State]= {
+        "Black, non-Hispanic": +a["Black, non-Hispanic"],
+         "Hispanic, regardless of race": a["Hispanic, regardless of race"],
+         "White, non-Hispanic": a["White, non-Hispanic"],
+         "Asian, non-Hispanic": a["Asian, non-Hispanic"],
+         "Native  Hawaiian/Pacific Islander,non-Hispanic": a["Native  Hawaiian/Pacific Islander,non-Hispanic"],
+         "American Indian/Alaska Native, non-Hispanic": a["American Indian/Alaska Native, non-Hispanic"],
+         "Two or more races, non-Hispanic": a["Two or more races, non-Hispanic"]
+         });
+
+         var result = Object.values(AllTeachers).sort(function(a, b) {
+  return AllTeachers[b] - AllTeachers[a];
+})
+
+//create color domain
+        min = d3.min(TeacherData, function(d){ return d["Total Population"]})
+        max = d3.max(TeacherData, function(d){ return d["Total Population"]})
+        color.domain([ min,max]);
+
+        var tooltip = d3.select('#game-select')
+            .append("div")
+            .style("opacity", 0)
+            .attr("class", "tooltip")
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "1px")
+            .style("border-radius", "5px")
+            .style("padding", "10px")
+        
+  // create Choropleth with default option. Call createMapAndLegend() with required arguments. 
+            svg.selectAll('path')
+                .data(states.features)
+                .enter()
+                .append('path')
+                .attr('d', path) //transforms our feature using path geo
+                .attr('stroke', 'black')
+
+//initially fill based on teacher population by state  If population is zero (no data provided) fill with grey
+                .style("fill", function(d) {
+                            if (StatePopulations[d.properties.name] == 0) {return "grey"}
+                            else 	{ return color(StatePopulations[d.properties.name])}
+                        ;})
+                // .attr('fill', d => color(StatePopulations[d.properties.name]))
+                .on('mouseover', function(d) {
+                    // const data = Object.keys(TeacherPercent[d.properties.name])
+
+                    if (StatePopulations[d.properties.name] == 0) {console.log('no data')}
+                    else{
+                        // xbar.domain([0, 100])
+                        const datavalues = Object.values(TeacherPercent[d.properties.name]);
+                        const datakeys = Object.keys(TeacherPercent[d.properties.name])
+                        // console.log(datavalues[0])
+                        xbar.domain([0,100]);
+
+                        ybar.domain(Object.keys(TeacherPercent[d.properties.name]));
+                        // const data = TeacherPercent[d.properties.name]
+                        // const data2 = Object.values(data)
+
+
+                        barDict = []
+                        for (let i = 0; i<datavalues.length; i++){
+                            barDict.push( {
+                                'percent' : datavalues[i],
+                                'dem' : datakeys[i]
+                            })
+
+                        }
+                        console.log('barDict: ', barDict)
+                        
+// append the rectangles for the bar chart
+svg2.selectAll("bar")
+.data(barDict)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("width", function(d) {return xbar(d.percent); } )
+      .attr("y", function(d) { return ybar(d.dem); })
+      .attr("height", ybar.bandwidth())
+      .style("fill", "pink");
+// add the x Axis
+svg2.append("g")   
+.attr("transform", "translate(0," + height2 + ")")
+.call(d3.axisBottom(xbar));
+
+// // add the y Axis
+svg2.append("g")
+.call(d3.axisLeft(ybar));
+
+
+  // text label for the y axis
+svg2.append("text")
+.attr("transform", "rotate(-90)")
+.attr("y", 0 - margin2.left)
+.attr("x",0 - (height2 / 2))
+.attr("dy", "1em")
+.style("text-anchor", "middle")
+// text label for the x axis
+svg2.append("text")             
+.attr("transform",
+      "translate(" + (width2/2) + " ," + 
+                     (height2 + margin2.top + 30) + ")")
+.style("text-anchor", "middle")
+.text("Percent");    
+
+svg2.append("text")
+  .attr('x', (width2/2))
+  .attr('y', 10-(margin2.top)/2)
+  .attr('text-anchor', 'middle')
+  .style('font-size', '16px')
+  .style('font-weight', 'bold')
+  .text(d.properties.name)
+
+
+            
+                d3.select(this).style("fill", "pink")
+            }}).on("mouseout", function(d) {
+                div.transition()		
+                    .duration(500)		
+                    
+                        .style("opacity", 0);	
+                        svg2.selectAll("rect").remove();
+svg2.selectAll("g").remove();
+svg2.selectAll("text").remove();
+                d3.select(this).style("fill", function(d) {
+                    if (StatePopulations[d.properties.name] == 0) {return "grey"}
+                    else 	{ return color(StatePopulations[d.properties.name])}
+                ;})
+            });
+        }
+
+
+    </script>
+
+</body>
+
+<!-- </html> -->
+
+
+
+        <!-- } -->
+
+
+    <!-- </script> -->
+
+</body>
+
+<!-- </html> -->
+
+<h2 id="motivation">Motivation</h2>
+<p>It’s important that young people of every race and background see themselves in authority figures. Unfortunately, American teachers are not as diverse as the populations that they serve.  I visualized the racial breakdown of America’s educator’s state to state.</p>
+
+<h2 id="the-graph">The Graph</h2>
+<p>I built the choropleth using D3.js, HTML, and css after cleaning the csv file in python.  The color scale is based on the number of teachers per state.  The darker colors represents more teachers, the lighter colors represent that there are fewer teachers in that state, and the grey states represent states that did not have any data from my data source.  When you hover your mouse over each state, a bar graph shows the demographic breakdown of teachers in that state.</p>
+
+<h2 id="takeaway-questions">Takeaway Questions</h2>
+<ul>
+  <li>Why is teaching so heavily white?</li>
+  <li>Why is teaching so attractive to white people?</li>
+  <li>How can we as a nation take strides to attract a population of educators that better represent the students that they teach?</li>
+</ul>
+
+<h2 id="observations">Observations</h2>
+<ul>
+  <li>The lighter-colored states tended to have a higher percentage of white teachers.</li>
+  <li>Texas both has the most number of teachers and the greatest teacher diversity nation-wide.</li>
+</ul>
+
+<h2 id="github-code">Github Code</h2>
+<ul>
+  <li>Data Source: https://nces.ed.gov/surveys/sass/tables/sass1112_2013314_t1s_001.asp</li>
+  <li>Git Repository: https://github.com/ghomer12/D3_TeacherChoropleth1</li>
+</ul>
+
+:ET

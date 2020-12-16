@@ -1,0 +1,181 @@
+YEAR,MaritalStatus,percent
+1880,Divorced,0.192365299
+1880,"Married, spouse absent",1.621325806
+1880,"Married, spouse present",33.14665767
+1880,Never married/single,60.35700551
+1880,Widowed,4.682645709
+1900,Divorced,0.237045181
+1900,"Married, spouse absent",1.719531402
+1900,"Married, spouse present",34.8852746
+1900,Never married/single,58.02872781
+1900,Widowed,5.129421011
+1910,Divorced,0.385634884
+1910,"Married, spouse absent",1.963271527
+1910,"Married, spouse present",36.83419758
+1910,Never married/single,55.59836777
+1910,Widowed,5.21852824
+1920,Divorced,0.471524813
+1920,"Married, spouse absent",2.054854497
+1920,"Married, spouse present",38.88661513
+1920,Never married/single,53.24594483
+1920,Widowed,5.341060731
+1930,Divorced,0.833002666
+1930,"Married, spouse absent",2.216070521
+1930,"Married, spouse present",40.62646322
+1930,Never married/single,50.85679104
+1930,Widowed,5.46767255
+1940,Divorced,1.063598406
+1940,"Married, spouse absent",2.904421882
+1940,"Married, spouse present",42.22863704
+1940,Never married/single,48.03067472
+1940,Widowed,5.772667955
+1950,Divorced,1.15123416
+1950,"Married, spouse absent",1.188431161
+1950,"Married, spouse present",42.43600295
+1950,Never married/single,49.77728621
+1950,Separated,1.146447973
+1950,Widowed,4.300597545
+1960,Divorced,1.750679207
+1960,"Married, spouse absent",1.417204816
+1960,"Married, spouse present",44.97382553
+1960,Never married/single,45.12923053
+1960,Separated,1.212477996
+1960,Widowed,5.516581924
+1970,Divorced,2.436020022
+1970,"Married, spouse absent",1.405266381
+1970,"Married, spouse present",43.65348076
+1970,Never married/single,45.30266689
+1970,Separated,1.371571318
+1970,Widowed,5.83099463
+1980,Divorced,4.772417113
+1980,"Married, spouse absent",0.873577993
+1980,"Married, spouse present",43.83487965
+1980,Never married/single,42.90656363
+1980,Separated,1.720558365
+1980,Widowed,5.892003258
+1990,Divorced,6.282546277
+1990,"Married, spouse absent",1.067590664
+1990,"Married, spouse present",43.53258919
+1990,Never married/single,41.53937199
+1990,Separated,1.670100246
+1990,Widowed,5.907801635
+2000,Divorced,7.617914214
+2000,"Married, spouse absent",2.233347011
+2000,"Married, spouse present",40.99465212
+2000,Never married/single,42.04089972
+2000,Separated,1.660018921
+2000,Widowed,5.453168015
+2001,Divorced,7.785315625
+2001,"Married, spouse absent",1.033462338
+2001,"Married, spouse present",44.33646534
+2001,Never married/single,39.81929297
+2001,Separated,1.448407406
+2001,Widowed,5.577056314
+2002,Divorced,7.829500069
+2002,"Married, spouse absent",1.036358628
+2002,"Married, spouse present",44.51884745
+2002,Never married/single,39.64906926
+2002,Separated,1.429983213
+2002,Widowed,5.536241378
+2003,Divorced,7.900141264
+2003,"Married, spouse absent",1.113037773
+2003,"Married, spouse present",44.297397
+2003,Never married/single,39.72724716
+2003,Separated,1.39004191
+2003,Widowed,5.57213489
+2004,Divorced,7.931902937
+2004,"Married, spouse absent",1.037632059
+2004,"Married, spouse present",44.3911939
+2004,Never married/single,39.8511664
+2004,Separated,1.345664686
+2004,Widowed,5.442440014
+2005,Divorced,7.950027446
+2005,"Married, spouse absent",1.109478248
+2005,"Married, spouse present",44.18547933
+2005,Never married/single,39.8673212
+2005,Separated,1.457694953
+2005,Widowed,5.429998819
+2006,Divorced,8.120068383
+2006,"Married, spouse absent",1.415948394
+2006,"Married, spouse present",42.78932068
+2006,Never married/single,40.53723877
+2006,Separated,1.513734699
+2006,Widowed,5.623689069
+2007,Divorced,8.113937399
+2007,"Married, spouse absent",1.440028958
+2007,"Married, spouse present",42.88317012
+2007,Never married/single,40.50270114
+2007,Separated,1.473254745
+2007,Widowed,5.586907638
+2008,Divorced,8.287551693
+2008,"Married, spouse absent",1.544828349
+2008,"Married, spouse present",42.59020608
+2008,Never married/single,40.51639358
+2008,Separated,1.46111335
+2008,Widowed,5.599906954
+2009,Divorced,8.373697673
+2009,"Married, spouse absent",1.409463337
+2009,"Married, spouse present",42.37886079
+2009,Never married/single,40.76502411
+2009,Separated,1.513662724
+2009,Widowed,5.559291365
+2010,Divorced,8.61112091
+2010,"Married, spouse absent",1.472617102
+2010,"Married, spouse present",41.63972078
+2010,Never married/single,41.16295826
+2010,Separated,1.558745948
+2010,Widowed,5.554836999
+2011,Divorced,8.81695055
+2011,"Married, spouse absent",1.708763159
+2011,"Married, spouse present",40.20505029
+2011,Never married/single,41.79903259
+2011,Separated,1.618468023
+2011,Widowed,5.851735386
+2012,Divorced,8.904282965
+2012,"Married, spouse absent",1.67785084
+2012,"Married, spouse present",40.50542398
+2012,Never married/single,41.62879895
+2012,Separated,1.591343482
+2012,Widowed,5.692299785
+2013,Divorced,8.759175114
+2013,"Married, spouse absent",1.777422398
+2013,"Married, spouse present",40.64089735
+2013,Never married/single,41.77349619
+2013,Separated,1.547436075
+2013,Widowed,5.501572877
+2014,Divorced,8.870239194
+2014,"Married, spouse absent",1.79917066
+2014,"Married, spouse present",40.65102263
+2014,Never married/single,41.64504997
+2014,Separated,1.509891113
+2014,Widowed,5.52462643
+2015,Divorced,8.900271846
+2015,"Married, spouse absent",1.788970783
+2015,"Married, spouse present",40.76390092
+2015,Never married/single,41.58128125
+2015,Separated,1.460658626
+2015,Widowed,5.504916579
+2016,Divorced,8.909841859
+2016,"Married, spouse absent",1.823102709
+2016,"Married, spouse present",40.82443552
+2016,Never married/single,41.52572147
+2016,Separated,1.424906866
+2016,Widowed,5.491991572
+2017,Divorced,8.956690198
+2017,"Married, spouse absent",1.843769984
+2017,"Married, spouse present",40.82688618
+2017,Never married/single,41.66812955
+2017,Separated,1.393806974
+2017,Widowed,5.310717107
+2018,Divorced,9.017840505
+2018,"Married, spouse absent",1.879896309
+2018,"Married, spouse present",40.92213534
+2018,Never married/single,41.46781234
+2018,Separated,1.370305353
+2018,Widowed,5.342010161
+2019,Divorced,9.149996929
+2019,"Married, spouse absent",1.861861806
+2019,"Married, spouse present",41.32026857
+2019,Never married/single,40.9505262
+2019,Separated,1.296043003
+2019,Widowed,5.421303495
