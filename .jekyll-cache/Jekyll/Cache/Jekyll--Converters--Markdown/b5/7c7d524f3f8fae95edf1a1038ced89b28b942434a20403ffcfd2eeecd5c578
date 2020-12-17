@@ -1,0 +1,255 @@
+I"�*
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>d3 Updating Bar Chart With Dropdown</title>
+        <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <style>
+        body {
+            font: 14px sans-serif;
+        }
+        select {
+            display: block;
+        }
+        .bar {
+            fill: purple;
+            opacity: 0.8;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="vis-container"></div>
+        <script type="text/javascript">
+            // Load and munge data, then make the visualization.
+            "https://raw.githubusercontent.com/ghomer12/Top10MaritalStatusByOCC/main/top10Counts_2000_2019.csv"
+
+            d3.csv("https://raw.githubusercontent.com/ghomer12/Top10MaritalStatusByOCC/main/top10Counts_2000_2019.csv"
+, function(error, data) {
+                // var cerealMap = {};
+                console.log(data)
+                data.forEach(function(d) {
+                d.Count = +d.Count;
+                d.MaritalStatus = d.MaritalStatus;
+                d.OCC = d.OCC;
+            });
+
+
+            var nest = d3.nest()
+                .key(function(d){
+                    return d.MaritalStatus;
+                })
+                .entries(data)
+            console.log(nest)
+
+            const xValues = []
+            const yValues = []
+            for (i=0; i<nest[0].values.length; i++){
+                console.log(nest[0].values[i]['OCC'])
+                xValues.push(nest[0].values[i]['OCC'])
+                yValues.push(nest[0].values[i]['Count'])
+            }
+
+
+            var map = {};
+
+            for (j=0; j<nest.length; j++){
+                console.log(nest[j].key)
+                const yValues = []
+                const xValues = []
+
+                for (i=0; i<12; i++){
+                    xValues.push(nest[j].values[i]['OCC'])
+                    yValues.push(nest[j].values[i]['Count'])
+            }
+                map[nest[j].key] = [xValues, yValues]
+            }
+            console.log(map)
+                makeVis(map);
+            });
+
+            var makeVis = function(map) {
+                // Define dimensions of vis
+                var margin = { top: 30, right: 50, bottom: 400, left: 50 },
+                    width  = 1000 - margin.left - margin.right,
+                    height = 650 - margin.top  - margin.bottom;
+
+
+                // Make x scale
+                var xScale = d3.scale.ordinal()
+                    // .domain(xValues)
+                    .rangeRoundBands([0, width], 0.1);
+
+                // Make y scale, the domain will be defined on bar update
+                var yScale = d3.scale.linear()
+                .domain([0, 20]) 
+                    .range([height, 0]);
+
+                // Create canvas
+                var canvas = d3.select("#vis-container")
+                  .append("svg")
+                    .attr("width",  width  + margin.left + margin.right)
+                    .attr("height", height + margin.top  + margin.bottom)
+                  .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                // const xValues = map['Maried Spouse Present'][0]
+
+                // Make x scale
+                // Make x scale
+                // const xValues = map['Divorced'][0]
+
+                
+                var xScale = d3.scale.ordinal()
+                    .rangeRoundBands([0, width], 0.1);
+
+                // Make x-axis and add to canvas
+                var xAxis = d3.svg.axis()
+                    .scale(xScale)
+                    .orient("bottom");
+
+                var x = canvas.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    
+
+                // Make y-axis and add to canvas
+                var yAxis = d3.svg.axis()
+                    .scale(yScale)
+                    .orient("left");
+
+                var yAxisHandleForUpdate = canvas.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);
+
+                var updateBars = function(data, occ, newCereal) {
+                    console.log(data)
+
+                    xScale.domain(occ)
+                    x.call(xAxis).selectAll("text")	
+                        .style("text-anchor", "end")
+                        .attr("dx", "-.8em")
+                        .attr("dy", ".15em")
+                        .attr("transform", "rotate(-70)");
+console.log(d3.extent(data))
+                    // First update the y-axis domain to match data
+                    // yScale.domain( d3.extent(data) );
+                    yScale.domain([0, 20]);
+
+                    yAxisHandleForUpdate.call(yAxis);
+
+                    var bars = canvas.selectAll(".bar").data(data);
+
+                    // Add bars for new data
+                    bars.enter()
+                      .append("rect")
+                        .attr("class", "bar")
+                        .attr("x", function(d,i) { return xScale( map[newCereal][0][i] ); })
+                        .attr("width", xScale.rangeBand())
+                        .attr("y", function(d,i) { return yScale(d); })
+                        .attr("height", function(d,i) { return height - yScale(d); });
+
+                    // Update old ones, already have x / width from before
+                    bars
+                        .transition().duration(250)
+                        .attr("y", function(d,i) { return yScale(d); })
+                        .attr("height", function(d,i) { return height - yScale(d); });
+
+                    // Remove old ones
+                    bars.exit().remove()
+                    // d3.selectAll("text").remove():
+                };
+
+
+
+                // Handler for dropdown value change
+                var dropdownChange = function() {
+                    var newCereal = d3.select(this).property('value'),
+                        newData   = map[newCereal][1]
+                        newOCC = map[newCereal][0];
+                        console.log(newOCC)
+
+                    updateBars(newData, newOCC, newCereal)
+                                    };
+
+                // Get names of cereals, for dropdown
+                var MeritalStatus = Object.keys(map).sort();
+
+                var dropdown = d3.select("#vis-container")
+                    .insert("select", "svg")
+                    .on("change", dropdownChange);
+
+                dropdown.selectAll("option")
+                    .data(MeritalStatus)
+                  .enter().append("option")
+                    .attr("value", function (d) { return d; })
+                    .text(function (d) {
+                        return d[0].toUpperCase() + d.slice(1,d.length); // capitalize 1st letter
+                    });
+                console.log(map['Maried Spouse Present'][1])
+                var initialData = map['Divorced'][1];
+                updateBars(map['Divorced'][1], map['Divorced'][0], 'Divorced');
+            };
+        </script>
+    </body>
+</html>
+
+<h2 id="motivation">Motivation</h2>
+<p>Data aggregation/visualization is interesting because it usually leads to more and more questions.  As I was looking at marital trends, I wanted to know which professions are the most likely to be:</p>
+
+<ul>
+  <li>Married with heir spouse present?</li>
+  <li>Married with heir spouse absent?</li>
+  <li>Divorced?</li>
+  <li>Separated?</li>
+  <li>Widowed?</li>
+</ul>
+
+<p>So, I sought to answer that question.</p>
+
+<h2 id="the-graph">The Graph</h2>
+<p>In python, I loaded the data and used some functions that I had already built that grouped everybody from the census data I pulled from ipums.com by profession and marital status.  Then I built a few more functions that ranked and sorted the top 10 in each category by percent.  I then built a new data frame with the count of the number of times each occupation was represented in the top ten.  My bar graph was built in D3.js.</p>
+
+<p>I originally used data from 1880-2019, but I ran into some interesting issues.</p>
+
+<ul>
+  <li>
+    <p>“Separated” had a huge bar with no text that described what that bar is.  The issue?  NANs.  There were 60 nans in this column, which didn’t make sense.  So I went back into python and figured out that “Separated” wasn’t even a category you could claim for marital status until 1950.  The data from 1880-2000 was incremented by decade, so 1880-1990 represented 6 years.  Since 6x10=60, there were 60 NaNs in “Separated”.</p>
+  </li>
+  <li>
+    <p>I also decided that incrementing by 10 years from 1880-2000 and then by 1 year from 2000-2019 made the numbers skew in favor of later years, so I decided to only use data from 2000-2019.</p>
+  </li>
+</ul>
+
+<p>So now the maximum count is 20.  So if you see an occupation, like denistry, that has a count of 20, then you know that that occupation was in the top 10 for it’s marital status for 20 years.  Which, is impressive to say the least.</p>
+
+<h2 id="takeaway-questions">Takeaway Questions</h2>
+<ul>
+  <li>How does age and income come into play with marital status?</li>
+  <li>What about Geography?  What do things look like from state to state?</li>
+  <li>Are there trends between political party lines too?</li>
+</ul>
+
+<h2 id="observations">Observations</h2>
+<ul>
+  <li>Why were practical nurses in the top 10 for divorce for 20 years straight?</li>
+  <li>I understand how members of the military may be away from their spouse, but why would a farm laborer or roofer be away from their spouse so consistently?</li>
+  <li>Dentists, Optomitrists, Physicians and Surgeons, Farmers, and Clergymen were in the top 10 for “Married, Spouse Present” for 20 years straight.</li>
+  <li>Charwomen and cleaners, Attendants hospital and other institution, and Laundry and dry cleaning Operatives were in the top 10 for “Separated” for 20 years straight.</li>
+  <li>There were a grand total of 12 occupations listed in the top 10 for “Single, Never Maried.”  Which is  wild since other categories reported upwards of 60 occupations.  Which means that these occupations are the most single and vary only slightly.  They also seem to be jobs that that don’t necessarily require a college or high school degree, meaning they may be younger people.</li>
+  <li>Widowed was the saddest for me. Demonstrators, People who left this category blank on their census, Dressmakers and seamstresses, except factory, Charwomen and cleaners, and Telephone operators were in the top 10 for “Widowed” for 20 years straight.</li>
+</ul>
+
+<h2 id="github-code">Github Code</h2>
+<ul>
+  <li>Data Source: ipums.com</li>
+  <li>Git Repository: https://github.com/ghomer12/Top10MaritalStatusByOCC</li>
+</ul>
+
+:ET

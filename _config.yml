@@ -4,14 +4,20 @@ description: > # this means to ignore newlines until "baseurl:"
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 permalink: ':title/'
-baseurl: "/flexible-jekyll" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/greerhomer" # the subpath of your site, e.g. /blog
+url: "greerhomer.com" # the base hostname & protocol for your site, e.g. http://example.com
 site-twitter: #if your site has a twitter account, enter it here
 
 # Author Settings
 author: Greer Homer # add your name
 author-img: greer-homer.jpg # add your photo
-about-author: Current data analyst and former math teacher doing mathy things # add description
+about-author: Current data analyst and former math teacher. 
+about-Grad: Master of Science in Analytics&#58 Georgia Tech (May 2021)
+about-Bachelor: Bachelor of Education&#58 University of Georgia 
+about-Minor: Minor in Mathematics &#58 Georgia State
+
+
+# add description
 # social-twitter: # add your Twitter handle
 # social-facebook: # add your Facebook handle
 social-github: ghomer12 # add your Github handle
