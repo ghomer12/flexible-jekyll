@@ -11,7 +11,7 @@ site-twitter: #if your site has a twitter account, enter it here
 # Author Settings
 author: Greer Homer # add your name
 author-img: greer-homer.jpg # add your photo
-about-author: Current data analyst and former math teacher. 
+about-author: Current data analyst and former math teacher.  
 about-Grad: Master of Science in Analytics&#58 Georgia Tech (May 2021)
 about-Bachelor: Bachelor of Education&#58 University of Georgia 
 about-Minor: Minor in Mathematics &#58 Georgia State
@@ -25,7 +25,7 @@ social-linkedin: greer-homer-316828a6
 social-email: greer.homer@gmail.com # add your Email address
 
 # Disqus
-discus-identifier: Greer # add your discus identifier
+# discus-identifier: Greer # add your discus identifier
 
 # Tracker
 analytics: # Google Analytics
