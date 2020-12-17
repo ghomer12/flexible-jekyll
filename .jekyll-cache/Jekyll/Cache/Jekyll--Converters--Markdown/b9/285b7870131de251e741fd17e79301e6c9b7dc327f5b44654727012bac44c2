@@ -1,4 +1,4 @@
-I"g4
+I"I4
 <!-- <meta charset="utf-8"> -->
 <head>
 	<style>
@@ -35,7 +35,8 @@ div.tooltip {
 <body>
     <!-- Add heading for the visualization -->
     <!-- <h1>Who Teaches in America?</h1> -->
-    <p class="description"> Total number of public school teachers and percentage distribution of school teachers, by race/ethnicity and state: 2011–12</p>
+    <p class="description"> Hover over each state to see the percentage distribution of public school teachers by race/ethnicity and state (2011–12)</p>
+    
     <div class="footer">Data Source: https://nces.ed.gov/surveys/sass/tables/sass1112_2013314_t1s_001.asp</div>
 
     <!-- </select> -->
@@ -337,7 +338,7 @@ svg2.selectAll("text").remove();
 <!-- </html> -->
 
 <h2 id="motivation">Motivation</h2>
-<p>It’s important that young people of every race and background see themselves in authority figures. Unfortunately, American teachers are not as diverse as the populations that they serve.  I visualized the racial breakdown of America’s educator’s state to state.</p>
+<p>It’s important that young people see themselves in authority figures. Unfortunately, American teachers are not as diverse as the populations that they serve.  I visualized the racial breakdown of America’s educator’s state to state.</p>
 
 <h2 id="the-graph">The Graph</h2>
 <p>I built the choropleth using D3.js, HTML, and css after cleaning the csv file in python.  The color scale is based on the number of teachers per state.  The darker colors represents more teachers, the lighter colors represent that there are fewer teachers in that state, and the grey states represent states that did not have any data from my data source.  When you hover your mouse over each state, a bar graph shows the demographic breakdown of teachers in that state.</p>
@@ -351,8 +352,8 @@ svg2.selectAll("text").remove();
 
 <h2 id="observations">Observations</h2>
 <ul>
-  <li>The lighter-colored states tended to have a higher percentage of white teachers.</li>
-  <li>Texas both has the most number of teachers and the greatest teacher diversity nation-wide.</li>
+  <li>The states with fewer teachers tend to have a higher percentage of white teachers.</li>
+  <li>Texas has the most number of teachers and the greatest teacher diversity nation-wide.</li>
 </ul>
 
 <h2 id="github-code">Github Code</h2>

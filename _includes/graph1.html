@@ -1,3 +1,4 @@
+<h5>Choose an occupation from the dropdown menu to compare National Rates (dotted lines) to the selected Occupational Rates (solid lines).</h5>
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
@@ -98,7 +99,7 @@ svg.selectAll("mydots")
   .data(res)
   .enter()
   .append("circle")
-    .attr("cx", width-150)
+    .attr("cx", width-170)
     .attr("cy", function(d,i){ return 5 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
     .attr("r", 7)
     .style("fill", function(d){ return color(d)})
@@ -108,7 +109,7 @@ svg.selectAll("mylabels")
   .data(res)
   .enter()
   .append("text")
-    .attr("x", width-130)
+    .attr("x", width-150)
     .attr("y", function(d,i){ return 5 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
     .style("fill", function(d){ return color(d)})
     .text(function(d){ return d})
@@ -154,6 +155,7 @@ svg.append("text")
         .style("font-size", "16px") 
         .style("text-decoration", "underline")  
         .text("Mariage Rates by Profession");
+nest.unshift("Blank")
 
     var Menu = d3.select("#Dropdown")
     Menu
@@ -174,12 +176,12 @@ Menu.on('change', function(n){
   svg.selectAll(".NewLine").remove()
 
 
-  console.log('you changed your selection')
+  // console.log('you changed your selection')
   for (let i = 0; i < nest.length; i++) {
     if (nest[i].key == event.target.value ){
-      console.log('it is a match!')
-      console.log(nest[i])
-      console.log(nest[i].values)
+      // console.log('it is a match!')
+      // console.log(nest[i])
+      // console.log(nest[i].values)
       const dataSelection = nest[i].values
 
         // Draw the line
